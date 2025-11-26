@@ -80,17 +80,147 @@
     .right::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.06));border-radius:10px}
 
     /* Responsive */
-    @media (max-width:1100px){:root{--panel-width:320px}.container{padding:18px;grid-template-columns:1fr var(--panel-width)}}
+    @media (max-width:1100px){
+      :root{--panel-width:320px}
+      .container{padding:18px;grid-template-columns:1fr var(--panel-width)}
+    }
+    
     @media (max-width:900px){
-      .container{grid-template-columns:1fr;}
-      .right{position:relative;order:2;height:auto;margin-top:10px}
+      .container{
+        grid-template-columns:1fr;
+        padding: 16px;
+        gap: 16px;
+      }
+      .right{
+        position:relative;
+        order:2;
+        height:auto;
+        margin-top:10px;
+        top: 0;
+      }
       .left{order:1}
       footer{position:relative}
     }
+    
+    @media (max-width:768px){
+      .container{
+        padding: 12px;
+        gap: 12px;
+      }
+      
+      h1.project-head{
+        font-size: 24px;
+      }
+      
+      .hero img{
+        max-height: 380px;
+      }
+      
+      .thumbs{
+        padding: 8px 0;
+        margin-bottom: 14px;
+      }
+      
+      .thumbs-inner{
+        gap: 8px;
+        padding-left: 8px;
+      }
+      
+      .thumb{
+        width: 120px;
+        height: 80px;
+      }
+      
+      .summary{
+        padding: 14px;
+        margin-top: 6px;
+      }
+      
+      .summary h2{
+        font-size: 16px;
+      }
+      
+      .description{
+        font-size: 13px;
+      }
+      
+      .badge{
+        font-size: 12px;
+        padding: 5px 7px;
+      }
+      
+      .right{
+        padding: 14px;
+      }
+    }
+    
     @media (max-width:480px){
-      .thumb{width:88px;height:56px}
-      .hero img{max-height:320px}
-      .thumbs-inner{gap:8px}
+      .container{
+        padding: 10px;
+        gap: 10px;
+      }
+      
+      h1.project-head{
+        font-size: 22px;
+      }
+      
+      .hero img{
+        max-height: 280px;
+      }
+      
+      .thumb{
+        width: 100px;
+        height: 70px;
+      }
+      
+      .thumbs-inner{
+        gap: 6px;
+      }
+      
+      .summary{
+        padding: 12px;
+      }
+      
+      .summary .meta{
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      
+      .right{
+        padding: 12px;
+      }
+      
+      .product-title h3{
+        font-size: 16px;
+      }
+      
+      .btn{
+        padding: 10px;
+        font-size: 14px;
+      }
+      
+      .lightbox{
+        padding: 10px;
+      }
+      
+      .lightbox img{
+        max-width: 100%;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .thumb{
+        width: 88px;
+        height: 56px;
+      }
+      
+      h1.project-head{
+        font-size: 20px;
+      }
+      
+      .hero img{
+        max-height: 240px;
+      }
     }
 
     /* accessibility focus */
@@ -111,7 +241,7 @@
       <!-- Thumbnails strip -->
       <div class="thumbs" aria-label="Gallery thumbnails">
         <div class="thumbs-inner" id="thumbsInner" role="list">
-          <button class="thumb selected" data-src="AlienShooter/thumbnail.png" aria-label=thumbnail 1" role="listitem" tabindex="0"><img src="AlienShooter/thumbnail.png" alt="thumb0" loading="lazy"></button>
+          <button class="thumb selected" data-src="AlienShooter/thumbnail.png" aria-label="thumbnail 1" role="listitem" tabindex="0"><img src="AlienShooter/thumbnail.png" alt="thumb0" loading="lazy"></button>
           <button class="thumb" data-src="AlienShooter/snap1.png" aria-label="Thumbnail 2" role="listitem" tabindex="0"><img src="AlienShooter/snap1.png" alt="thumb1" loading="lazy"></button>
           <button class="thumb" data-src="AlienShooter/snap2.png" aria-label="Thumbnail 3" role="listitem" tabindex="0"><img src="AlienShooter/snap2.png" alt="thumb2" loading="lazy"></button>
           <button class="thumb" data-src="AlienShooter/snap3.png" aria-label="Thumbnail 4" role="listitem" tabindex="0"><img src="AlienShooter/snap3.png" alt="thumb3" loading="lazy"></button>
