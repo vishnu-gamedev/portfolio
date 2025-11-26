@@ -1,417 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Survival Sandbox Prototype</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survival Sandbox Prototype — Project</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root{
+      --panel-width:360px;
+      --accent:#4a8cff;
+      --muted:#97a6d9;
+      --bg:#000;
+      --card:#0b0f14;
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(255,255,255,0.02);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;background:var(--bg);color:#fff;font-family:'Poppins',sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+    /* Layout */
+    .container{display:grid;grid-template-columns:1fr var(--panel-width);gap:28px;padding:28px;align-items:start;min-height:100vh}
+
+    /* Left column */
+    .left{max-width:1200px;width:100%}
+    h1.project-head{font-size:28px;margin-bottom:8px}
+    .meta-row{display:flex;gap:12px;align-items:center;margin-bottom:18px}
+    .meta-row .role{color:var(--muted);font-weight:500}
+
+    /* Hero */
+    .hero{background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border-radius:12px;overflow:hidden;margin-bottom:14px;position:relative;box-shadow:0 10px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03)}
+    .hero img{width:100%;height:auto;display:block;max-height:560px;object-fit:cover;cursor:zoom-in;transition:transform .36s cubic-bezier(.2,.9,.3,1)}
+    .hero img:hover{transform:scale(1.02)}
+
+    /* Thumbs */
+    .thumbs{display:flex;gap:12px;align-items:center;overflow:hidden;padding:12px 0;margin-bottom:18px}
+    .thumbs-inner{display:flex;gap:12px;align-items:center;overflow:hidden;padding-bottom:6px;padding-left:10px;padding-top:10px}
+    .thumb{flex:0 0 auto;width:150px;height:96px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);cursor:pointer;background:#07080a;transition:transform .18s,box-shadow .18s;display:inline-flex}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .thumb.selected{outline:2px solid var(--accent);box-shadow:0 8px 30px rgba(74,140,255,0.12);transform:translateY(-6px)}
+    .thumb:focus{outline:2px solid rgba(74,140,255,0.18);outline-offset:2px}
+
+    .thumb:hover{transform:translateY(-4px)}
+    .thumbs-nav{display:flex;align-items:center;gap:10px;margin-left:8px}
+    .nav-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;cursor:pointer;border:none}
+
+    /* Summary */
+    .summary{margin-top:8px;padding:18px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
+    .summary h2{font-size:18px;color:#fff;margin-bottom:8px}
+    .summary .meta{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    .badge{background:var(--glass);padding:6px 8px;border-radius:6px;font-size:13px;color:var(--muted)}
+    .description{color:#cbd9ff;line-height:1.6;font-weight:300;font-size:14px}
+
+    /* Right panel */
+    .right{position:sticky;top:28px;height:calc(100vh - 56px);overflow:auto;padding:18px;border-radius:12px;background:linear-gradient(180deg,var(--card), #06070a);border:1px solid rgba(255,255,255,0.03)}
+    .product-title{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+    .product-title h3{font-size:18px;margin:0;text-align:center}
+    .rating{color:var(--accent);font-weight:600}
+
+    .buy-box{margin:16px 0;padding:12px;background:var(--glass);border-radius:10px}
+    .price{font-weight:700;color:#fff;margin-bottom:8px}
+    .btn{display:block;width:100%;text-align:center;padding:11px;border-radius:10px;background:var(--accent);color:#001;cursor:pointer;border:none;font-weight:600;text-decoration:none}
+    .btn.secondary{background:transparent;color:#cbd9ff;border:1px solid rgba(255,255,255,0.06);margin-top:10px}
+    .btn.alt{background:transparent;color:var(--accent);border:1px dashed rgba(74,140,255,0.12);margin-top:10px}
+
+    .specs{margin-top:18px;font-size:13px;color:#cbd9ff}
+    .specs dt{color:var(--muted);font-weight:600;margin-top:10px}
+    .specs dd{margin:6px 0 0 0;color:#cbd9ff}
+
+    footer{margin-top:18px;color:#8899cc;font-size:13px}
+
+    /* Lightbox */
+    .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:1600;align-items:center;justify-content:center;padding:20px}
+    .lightbox.active{display:flex}
+    .lightbox img{max-width:95%;max-height:92vh;object-fit:contain}
+
+    /* Fancy scrollbar for panels */
+    .right::-webkit-scrollbar{width:10px}
+    .right::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.06));border-radius:10px}
+
+    /* Responsive */
+    @media (max-width:1100px){
+      :root{--panel-width:320px}
+      .container{padding:18px;grid-template-columns:1fr var(--panel-width)}
     }
     
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0a1a2a, #0c2b45);
-      color: #fff;
-      display: flex;
-      min-height: 100vh;
-      overflow: hidden;
+    @media (max-width:900px){
+      .container{
+        grid-template-columns:1fr;
+        padding: 16px;
+        gap: 16px;
+      }
+      .right{
+        position:relative;
+        order:2;
+        height:auto;
+        margin-top:10px;
+        top: 0;
+      }
+      .left{order:1}
+      footer{position:relative}
     }
     
-    /* Left side - Vertical Image Scroller */
-    .vertical-gallery {
-      width: 80%;
-      height: 100vh;
-      overflow-y: auto;
-      scroll-behavior: smooth;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 80px 40px 40px;
-      background: rgba(0, 10, 20, 0.7);
+    @media (max-width:768px){
+      .container{
+        padding: 12px;
+        gap: 12px;
+      }
+      
+      h1.project-head{
+        font-size: 24px;
+      }
+      
+      .hero img{
+        max-height: 380px;
+      }
+      
+      .thumbs{
+        padding: 8px 0;
+        margin-bottom: 14px;
+      }
+      
+      .thumbs-inner{
+        gap: 8px;
+        padding-left: 8px;
+      }
+      
+      .thumb{
+        width: 120px;
+        height: 80px;
+      }
+      
+      .summary{
+        padding: 14px;
+        margin-top: 6px;
+      }
+      
+      .summary h2{
+        font-size: 16px;
+      }
+      
+      .description{
+        font-size: 13px;
+      }
+      
+      .badge{
+        font-size: 12px;
+        padding: 5px 7px;
+      }
+      
+      .right{
+        padding: 14px;
+      }
     }
     
-    .artwork {
-      width: 100%;
-      max-width: 800px;
-      margin-bottom: 40px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-      transition: transform 0.3s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #1a2435;
-      min-height: 500px;
-      border: 1px solid #2a3a55;
-      cursor: pointer;
+    @media (max-width:480px){
+      .container{
+        padding: 10px;
+        gap: 10px;
+      }
+      
+      h1.project-head{
+        font-size: 22px;
+      }
+      
+      .hero img{
+        max-height: 280px;
+      }
+      
+      .thumb{
+        width: 100px;
+        height: 70px;
+      }
+      
+      .thumbs-inner{
+        gap: 6px;
+      }
+      
+      .summary{
+        padding: 12px;
+      }
+      
+      .summary .meta{
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      
+      .right{
+        padding: 12px;
+      }
+      
+      .product-title h3{
+        font-size: 16px;
+      }
+      
+      .btn{
+        padding: 10px;
+        font-size: 14px;
+      }
+      
+      .lightbox{
+        padding: 10px;
+      }
+      
+      .lightbox img{
+        max-width: 100%;
+      }
     }
     
-    .artwork:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 30px rgba(0, 100, 200, 0.3);
-    }
-    
-    .artwork img {
-      width: 100%;
-      height: auto;
-      max-height: 80vh;
-      object-fit: contain;
-      display: block;
-    }
-    
-    /* Video Section */
-    .video-container {
-      width: 100%;
-      max-width: 800px;
-      margin-bottom: 40px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-      background: #1a2435;
-      border: 1px solid #2a3a55;
-      min-height: 500px;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .video-title {
-      padding: 15px;
-      background: #243656;
-      color: #fff;
-      font-size: 16px;
-      text-align: center;
-      border-bottom: 1px solid #2a3a55;
-    }
-    
-    .video-wrapper {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 15px;
-    }
-    
-    .video-wrapper iframe {
-      width: 100%;
-      height: 100%;
-      min-height: 400px;
-      border: none;
-      border-radius: 8px;
-    }
-    
-    /* Right side - Fixed Description Panel */
-    .description-panel {
-      width: 20%;
-      height: 100vh;
-      background: #1a2435;
-      padding: 90px 25px 30px;
-      overflow-y: auto;
-      border-left: 1px solid #2a3a55;
-      position: fixed;
-      right: 0;
-      top: 0;
-    }
-    
-    .art-title {
-      font-size: 26px;
-      margin: 0 0 20px 0;
-      color: #fff;
-      border-bottom: 2px solid #4a8cff;
-      padding-bottom: 12px;
-      font-weight: 600;
-    }
-    
-    .description {
-      line-height: 1.6;
-      margin-bottom: 30px;
-      color: #ccd9ff;
-      font-size: 14px;
-      text-align: justify;
-      font-weight: 300;
-    }
-    
-    .software {
-      margin-bottom: 25px;
-    }
-    
-    .software h3 {
-      margin-bottom: 15px;
-      color: #4a8cff;
-      font-size: 16px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-align: left;
-      font-weight: 500;
-    }
-    
-    .software-icons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    
-    .software-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: all 0.3s;
-    }
-    
-    .software-icon {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.1);
-    }
-    
-    .software-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    
-    .software-name {
-      color: #ccd9ff;
-      font-size: 11px;
-      font-weight: 400;
-      text-align: center;
-    }
-    
-    /* Header */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10, 26, 42, 0.95);
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-      border-bottom: 1px solid #2a3a55;
-    }
-    
-    header h1 {
-      font-size: 16px;
-      letter-spacing: 1px;
-      color: #4a8cff;
-      font-weight: 600;
-    }
-    
-    nav {
-      display: flex;
-      gap: 25px;
-    }
-    
-    nav a {
-      text-decoration: none;
-      color: #ccd9ff;
-      font-size: 15px;
-      transition: 0.3s;
-      position: relative;
-      font-weight: 400;
-    }
-    
-    nav a:hover {
-      color: #4a8cff;
-    }
-    
-    nav a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: #4a8cff;
-      transition: width 0.3s;
-    }
-    
-    nav a:hover::after {
-      width: 100%;
-    }
-    
-    /* Footer */
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 35%;
-      background: rgba(10, 26, 42, 0.8);
-      color: #8899cc;
-      text-align: center;
-      padding: 12px;
-      z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    footer p {
-      font-size: 11px;
-      font-weight: 300;
-    }
-    
-    /* Scrollbar styling */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: #1a2435;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: #4a8cff;
-      border-radius: 3px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3a7cdf;
+    @media (max-width: 360px) {
+      .thumb{
+        width: 88px;
+        height: 56px;
+      }
+      
+      h1.project-head{
+        font-size: 20px;
+      }
+      
+      .hero img{
+        max-height: 240px;
+      }
     }
 
-    /* Minimalist design elements */
-    .divider {
-      height: 1px;
-      background: linear-gradient(to right, transparent, #4a8cff, transparent);
-      margin: 25px 0;
-      width: 100%;
-    }
-
-    /* Lightbox Styles */
-    .lightbox {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .lightbox.active {
-      display: flex;
-    }
-
-    .lightbox-content {
-      position: relative;
-      max-width: 90%;
-      max-height: 90%;
-    }
-
-    .lightbox-content img {
-      max-width: 100%;
-      max-height: 90vh;
-      object-fit: contain;
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      color: white;
-      font-size: 30px;
-      cursor: pointer;
-      z-index: 1001;
-      background: rgba(0, 0, 0, 0.5);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .lightbox-nav {
-      position: absolute;
-      top: 50%;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      transform: translateY(-50%);
-      padding: 0 20px;
-      box-sizing: border-box;
-    }
-
-    .lightbox-prev, .lightbox-next {
-      color: white;
-      font-size: 30px;
-      cursor: pointer;
-      background: rgba(0, 0, 0, 0.5);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.3s;
-    }
-
-    .lightbox-prev:hover, .lightbox-next:hover {
-      background: rgba(0, 0, 0, 0.8);
-    }
+    /* accessibility focus */
+    :focus{outline:2px solid rgba(74,140,255,0.18);outline-offset:2px}
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1></h1>
-    <nav>
-      <a href="index.html">HOME</a>
-    </nav>
-  </header>
+  <div class="container">
+    <div class="left">
+      <h1 class="project-head">Survival Sandbox Prototype</h1>
+      
+      <h3 style="margin-bottom:8px">Gallery</h3>
 
-  <!-- Left Side - Vertical Image Scroller -->
-  <div class="vertical-gallery">
-    <div class="artwork" onclick="openLightbox(0)">
-      <img src="survivalsandbox/thumbnail.png" alt="Survival Sandbox">
-    </div>
-    
-    <div class="artwork" onclick="openLightbox(1)">
-     <img src="survivalsandbox/snap1.png" alt="Survival Sandbox">
-    </div>
-    
-    <div class="artwork" onclick="openLightbox(2)">
-      <img src="survivalsandbox/snap2.png" alt="Survival Sandbox">
-    </div>
-    
-    <div class="artwork" onclick="openLightbox(3)">
-     <img src="survivalsandbox/snap3.png" alt="Survival Sandbox">
-    </div>
-<div class="artwork" onclick="openLightbox(4)">
-     <img src="survivalsandbox/snap4.png" alt="Survival Sandbox">
-    </div>
-    
-    <!-- Video Section -->
-    <div class="video-container">
-      <div class="video-title">Demo Video</div>
-      <div class="video-wrapper">
-        <iframe src="https://www.youtube.com/embed/J3lAs1xUy8w" title="Demo Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <!-- Hero / main media -->
+      <div class="hero" id="hero" aria-hidden="false">
+        <img id="hero-img" src="survivalsandbox/thumbnail.png" alt="Alien Shooter hero" loading="lazy" />
       </div>
-    </div>
-  </div>
+      <!-- Thumbnails strip -->
+      <div class="thumbs" aria-label="Gallery thumbnails">
+        <div class="thumbs-inner" id="thumbsInner" role="list">
+          <button class="thumb selected" data-src="survivalsandbox/thumbnail.png" aria-label="thumbnail 1" role="listitem" tabindex="0"><img src="survivalsandbox/thumbnail.png" alt="thumb0" loading="lazy"></button>
+          <button class="thumb" data-src="survivalsandbox/snap1.png" aria-label="Thumbnail 2" role="listitem" tabindex="0"><img src="survivalsandbox/snap1.png" alt="thumb1" loading="lazy"></button>
+          <button class="thumb" data-src="survivalsandbox/snap2.png" aria-label="Thumbnail 3" role="listitem" tabindex="0"><img src="survivalsandbox/snap2.png" alt="thumb2" loading="lazy"></button>
+          <button class="thumb" data-src="survivalsandbox/snap3.png" aria-label="Thumbnail 4" role="listitem" tabindex="0"><img src="survivalsandbox/snap3.png" alt="thumb3" loading="lazy"></button>
+          <button class="thumb" data-src="survivalsandbox/snap4.png" aria-label="Thumbnail 5" role="listitem" tabindex="0"><img src="survivalsandbox/snap4.png" alt="thumb4" loading="lazy"></button>
+        </div>
+      </div>
 
-  <!-- Right Side - Clean Description Panel -->
-  <div class="description-panel">
-    <h2 class="art-title">Survival Sandbox Prototype</h2>
-    
-    <p class="description">
-     This is an ongoing prototype developed in Unreal Engine 5.4. The project aims to explore survival sandbox mechanics such as resource gathering, crafting, and AI behavior.
+
+    </div>
+
+    <!-- Right specs panel -->
+    <aside class="right" aria-labelledby="productTitle">
+      <div class="product-title">
+        <div>
+          <h3 id="productTitle">Summary</h3>
+        </div>
+      </div>
+
+      <div class="summary" role="region" aria-label="Project summary">
+        <p class="description">     This is an ongoing prototype developed in Unreal Engine 5.4. The project aims to explore survival sandbox mechanics such as resource gathering, crafting, and AI behavior.
 <br>
 <br>
 
@@ -421,122 +271,113 @@ Currently, I have completed the implementation of a fully dynamic day and night 
 
 In Progress — currently focused on expanding survival mechanics.
     </p>
-    
-    <div class="divider"></div>
-    
-    <div class="software">
-      <h3>Software Used</h3>
-      <div class="software-icons">
-        <div class="software-item">
-          <div class="software-icon">
-            <img src="icon/photoshop.png" alt="Photoshop">
-          </div>
-          <div class="software-name">Photoshop</div>
+        <div class="meta" style="margin-top:12px">
+          <div class="badge">Character Mechanics</div>
+          <div class="badge">Blueprints</div>
+          <div class="badge">NPC Integration</div>
         </div>
-        
-        <div class="software-item">
-          <div class="software-icon">
-            <img src="icon/substance.png" alt="Substance Painter">
-          </div>
-          <div class="software-name">Substance Painter</div>
-        </div>
-        
-        <div class="software-item">
-          <div class="software-icon">
-            <img src="icon/3dmax.png" alt="3ds Max">
-          </div>
-          <div class="software-name">3ds Max</div>
-        </div>
-        
-        <div class="software-item">
-          <div class="software-icon">
-            <img src="icon/Unreal.jpg" alt="Unreal Engine">
-          </div>
-          <div class="software-name">Unreal Engine</div>
-        </div>
-        
       </div>
-    </div>
+
+      <h4 style="margin-top:12px">Tech Used</h4>
+      <div class="meta" style="margin-top:8px">
+        <div class="badge">Unreal Engine</div>
+        <div class="badge">3Ds Max</div>
+        <div class="badge">Photoshop</div>
+        <div class="badge">Quixel Bridge</div>
+      </div>
+
+      <div class="buy-box" aria-hidden="false">
+        <!-- Link targets: change these URLs to your real files -->
+        <a href="https://youtu.be/J3lAs1xUy8w" class="btn" id="demoReel" aria-label="View demo reel" target="_blank" rel="noreferrer">View Demo Reel</a>
+        <a href="Vishnu_Gamedev.html" class="btn secondary" id="backProjects" aria-label="Back to projects">Back to Projects</a>
+      </div>
+
+    </aside>
   </div>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox">
-    <div class="lightbox-close" onclick="closeLightbox()">
-      <i class="fas fa-times"></i>
-    </div>
-    <div class="lightbox-content">
-      <img id="lightbox-img" src="" alt="">
-    </div>
-    <div class="lightbox-nav">
-      <div class="lightbox-prev" onclick="changeImage(-1)">
-        <i class="fas fa-chevron-left"></i>
-      </div>
-      <div class="lightbox-next" onclick="changeImage(1)">
-        <i class="fas fa-chevron-right"></i>
-      </div>
-    </div>
+  <!-- Fullscreen lightbox -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
+    <button class="nav close" id="lbClose" style="position:absolute;top:20px;right:22px;background:rgba(255,255,255,0.04);border:none;border-radius:6px;padding:8px;color:#fff;cursor:pointer"><i class="fas fa-times"></i></button>
+    <img id="lbImg" src="" alt="expanded" />
   </div>
 
   <script>
-    // Lightbox functionality
+    // Elements
+    const thumbs = Array.from(document.querySelectorAll('.thumb'));
+    const heroImg = document.getElementById('hero-img');
     const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const artworks = document.querySelectorAll('.artwork img');
-    let currentImageIndex = 0;
+    const lbImg = document.getElementById('lbImg');
+    const lbClose = document.getElementById('lbClose');
+    const thumbsInner = document.getElementById('thumbsInner');
 
-    function openLightbox(index) {
-      currentImageIndex = index;
-      lightboxImg.src = artworks[currentImageIndex].src;
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden'; // Prevent scrolling when lightbox is open
+    // helper: set selected
+    function selectThumb(t){
+      thumbs.forEach(x=>x.classList.remove('selected'));
+      t.classList.add('selected');
+      const src = t.getAttribute('data-src') || t.querySelector('img').src;
+      heroImg.src = src;
+      heroImg.alt = t.querySelector('img').alt || 'preview';
+      // ensure thumbnail visible
+      t.scrollIntoView({behavior:'smooth',inline:'center'});
     }
 
-    function closeLightbox() {
-      lightbox.classList.remove('active');
-      document.body.style.overflow = ''; // Re-enable scrolling
-    }
-
-    function changeImage(direction) {
-      currentImageIndex += direction;
-      
-      // Loop around if at the beginning or end
-      if (currentImageIndex < 0) {
-        currentImageIndex = artworks.length - 1;
-      } else if (currentImageIndex >= artworks.length) {
-        currentImageIndex = 0;
-      }
-      
-      lightboxImg.src = artworks[currentImageIndex].src;
-    }
-
-    // Keyboard navigation
-    document.addEventListener('keydown', function(e) {
-      if (lightbox.classList.contains('active')) {
-        if (e.key === 'Escape') {
-          closeLightbox();
-        } else if (e.key === 'ArrowLeft') {
-          changeImage(-1);
-        } else if (e.key === 'ArrowRight') {
-          changeImage(1);
-        }
-      }
-    });
-
-    // Preload images for better user experience
-    window.addEventListener('load', function() {
-      const images = document.querySelectorAll('.artwork img, .software-icon img');
-      images.forEach(img => {
-        if (img.complete) {
-          img.style.opacity = 1;
-        } else {
-          img.style.opacity = 0;
-          img.addEventListener('load', function() {
-            this.style.opacity = 1;
-            this.style.transition = 'opacity 0.5s ease';
-          });
-        }
+    thumbs.forEach(t=>{
+      t.addEventListener('click',()=>selectThumb(t));
+      t.addEventListener('dblclick',()=>openLightbox(t));
+      // keyboard: Enter/Space to select, ArrowLeft/Right to navigate
+      t.addEventListener('keydown',(e)=>{
+        if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectThumb(t); }
+        if(e.key === 'ArrowRight') { e.preventDefault(); const next = thumbs[(thumbs.indexOf(t)+1)%thumbs.length]; next.focus(); }
+        if(e.key === 'ArrowLeft') { e.preventDefault(); const prev = thumbs[(thumbs.indexOf(t)-1+thumbs.length)%thumbs.length]; prev.focus(); }
       });
     });
+
+    // open lightbox on hero click
+    document.getElementById('hero').addEventListener('click',()=>{
+      const selected = document.querySelector('.thumb.selected') || thumbs[0];
+      openLightbox(selected);
+    });
+
+    function openLightbox(thumb){
+      const src = thumb.getAttribute('data-src') || thumb.querySelector('img').src;
+      lbImg.src = src;
+      lightbox.classList.add('active');
+      lightbox.setAttribute('aria-hidden','false');
+      document.documentElement.style.overflow='hidden';
+      // trap focus to close button for accessibility
+      lbClose.focus();
+    }
+    function closeLightbox(){
+      lightbox.classList.remove('active');
+      lightbox.setAttribute('aria-hidden','true');
+      document.documentElement.style.overflow='';
+    }
+    lbClose.addEventListener('click',closeLightbox);
+    lightbox.addEventListener('click',(e)=>{ if(e.target===lightbox) closeLightbox(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLightbox(); });
+
+    // make thumbs scroll horizontally with wheel
+    thumbsInner.addEventListener('wheel', (e)=>{
+      if(Math.abs(e.deltaX) < Math.abs(e.deltaY)){
+        e.preventDefault();
+        thumbsInner.scrollLeft += e.deltaY;
+      }
+    }, {passive:false});
+
+    // small enhancement: support left/right arrows to change hero when lightbox closed
+    document.addEventListener('keydown',(e)=>{
+      if(lightbox.classList.contains('active')) return;
+      if(e.key === 'ArrowRight'){
+        const cur = thumbs.findIndex(t=>t.classList.contains('selected'));
+        const next = thumbs[(cur+1)%thumbs.length]; selectThumb(next);
+      }
+      if(e.key === 'ArrowLeft'){
+        const cur = thumbs.findIndex(t=>t.classList.contains('selected'));
+        const prev = thumbs[(cur-1+thumbs.length)%thumbs.length]; selectThumb(prev);
+      }
+    });
+
+    // progressive enhancement: if JS disabled, ensure hero image still shows
   </script>
 </body>
 </html>
